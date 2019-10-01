@@ -81,3 +81,52 @@ The median is (2 + 3)/2 = 2.5
     if (n == 1) return (a1[0] + ar2[0]) / 2
     if (n == 2) return max(ar[0], ar2[0] + min(ar1[1], ar2[1])) / 2
 */
+
+var findMedianSortedArrays = function(nums1, nums2) {
+  let x = nums1.concat(nums2);
+  x.sort(function(a, b) {
+    return a - b;
+  });
+  let n = x.length;
+  return x % 2 === 0
+    ? (x[Math.floor(n / 2) - 1] + x[Math.ceil(n / 2)]) / 2
+    : x[Math.floor(n / 2)];
+};
+
+//
+// --------------------------------------------------------------------------
+//
+
+var findMedianSortedArrays = function(nums1, nums2) {
+  var i = 0,
+    j = 0,
+    count = 0,
+    middleLeft = -1;
+  var len = nums1.length + nums2.length;
+  while (i < nums1.length || j < nums2.length) {
+    var curr = 0;
+    if (nums2[j] === undefined || nums1[i] <= nums2[j]) {
+      curr = nums1[i];
+    } else if (nums1[i] === undefined || nums1[i] > nums2[j]) {
+      curr = nums2[j];
+    }
+    count++;
+    if (len % 2 !== 0) {
+      if (count === (len - 1) / 2 + 1) {
+        return curr;
+      }
+    } else {
+      if (count === len / 2) {
+        middleLeft = curr;
+      } else if (count === len / 2 + 1 && middleLeft !== -1) {
+        return (curr + middleLeft) / 2;
+      }
+    }
+    if (nums2[j] === undefined || nums1[i] <= nums2[j]) {
+      i++;
+    } else if (nums1[i] === undefined || nums1[i] > nums2[j]) {
+      j++;
+    }
+  }
+  return 0;
+};
